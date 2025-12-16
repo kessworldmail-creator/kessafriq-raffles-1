@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KESSAFRIQ RAFFLES</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a3a, #0c1825);
+            color: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 3px solid #f39c12;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #f39c12;
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(243, 156, 18, 0.5);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: #ecf0f1;
+            font-style: italic;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .left-panel {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(30, 40, 50, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .right-panel {
+            flex: 2;
+            min-width: 600px;
+            background: rgba(30, 40, 50, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .panel-title {
+            color: #f39c12;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #34495e;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ecf0f1;
+            font-weight: 600;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #34495e;
+            border-radius: 8px;
+            color: #ecf0f1;
+            font-size: 1rem;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #f39c12;
+            box-shadow: 0 0 0 2px rgba(243, 156, 18, 0.2);
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #f39c12, #e67e22);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(to right, #e67e22, #d35400);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .coins-grid {
+            display: grid;
+            grid-template-columns: repeat(20, 1fr);
+            gap: 8px;
+            margin-top: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        
+        .coin {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #f39c12, #c0392b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .coin:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+        
+        .coin.selected {
+            transform: rotateY(180deg);
+            background: radial-gradient(circle at 30% 30%, #3498db, #2980b9);
+        }
+        
+        .coin.selected::after {
+            content: attr(data-user);
+            position: absolute;
+            transform: rotateY(180deg);
+            font-size: 0.6rem;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            padding: 2px;
+        }
+        
+        .coin.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .coin-value {
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+        }
+        
+        .countdown {
+            text-align: center;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .countdown-title {
+            font-size: 1.8rem;
+            color: #f39c12;
+            margin-bottom: 15px;
+        }
+        
+        #countdown-timer {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #e74c3c;
+            text-shadow: 0 2px 10px rgba(231, 76, 60, 0.5);
+        }
+        
+        .status-info {
+            background: rgba(52, 152, 219, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .status-title {
+            color: #3498db;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+        
+        #user-status, #access-code-display {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .instructions {
+            background: rgba(46, 204, 113, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+        
+        .instructions h3 {
+            color: #2ecc71;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+            line-height: 1.6;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .prizes-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .prize-item {
+            background: rgba(155, 89, 182, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+        }
+        
+        .prize-item i {
+            font-size: 2rem;
+            color: #9b59b6;
+            margin-bottom: 10px;
+        }
+        
+        .winner-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .winner-item {
+            padding: 8px 12px;
+            border-bottom: 1px solid #34495e;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .winner-item:last-child {
+            border-bottom: none;
+        }
+        
+        @media (max-width: 1100px) {
+            .coins-grid {
+                grid-template-columns: repeat(15, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .right-panel, .left-panel {
+                min-width: 100%;
+            }
+            
+            .coins-grid {
+                grid-template-columns: repeat(10, 1fr);
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+        
+        .coin.flipped {
+            animation: flip 0.6s ease forwards;
+        }
+        
+        @keyframes flip {
+            0% { transform: rotateY(0); }
+            100% { transform: rotateY(180deg); }
+        }
+        
+        .login-section, .register-section, .raffle-section {
+            transition: opacity 0.5s ease;
+        }
+        
+        .logout-btn {
+            background: #e74c3c;
+            width: auto;
+            padding: 10px 20px;
+            margin-top: 20px;
+        }
+        
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #95a5a6;
+            border-top: 1px solid #34495e;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-coins"></i> KESSAFRIQ RAFFLES</h1>
+            <p class="tagline">Transparent, Fair, and Exciting Raffle Draws</p>
+        </header>
+        
+        <div class="countdown">
+            <div class="countdown-title">Raffle Ends In:</div>
+            <div id="countdown-timer">00:00:00</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="left-panel">
+                <div id="login-section" class="login-section">
+                    <h2 class="panel-title">Login to Play</h2>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" placeholder="Enter your username">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Enter your password">
+                    </div>
+                    <button id="login-btn" class="btn">Login</button>
+                    <p style="text-align: center; margin-top: 15px;">Don't have an account? <a href="#" id="show-register" style="color: #f39c12;">Register here</a></p>
+                </div>
+                
+                <div id="register-section" class="register-section hidden">
+                    <h2 class="panel-title">Create Account</h2>
+                    <div class="form-group">
+                        <label for="new-username">Username</label>
+                        <input type="text" id="new-username" placeholder="Choose a username">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-password">Password</label>
+                        <input type="password" id="new-password" placeholder="Choose a password">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password</label>
+                        <input type="password" id="confirm-password" placeholder="Confirm your password">
+                    </div>
+                    <button id="register-btn" class="btn">Create Account</button>
+                    <p style="text-align: center; margin-top: 15px;">Already have an account? <a href="#" id="show-login" style="color: #f39c12;">Login here</a></p>
+                </div>
+                
+                <div id="raffle-section" class="raffle-section hidden">
+                    <h2 class="panel-title">Your Raffle</h2>
+                    <div class="status-info">
+                        <div class="status-title">Your Status</div>
+                        <div id="user-status">Not logged in</div>
+                        <div id="access-code-display">No access code</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="access-code">Enter Access Code</label>
+                        <input type="text" id="access-code" placeholder="Enter your access code">
+                    </div>
+                    <button id="use-code-btn" class="btn">Use Access Code</button>
+                    <button id="request-code-btn" class="btn">Request New Access Code</button>
+                    <button id="logout-btn" class="btn logout-btn">Logout</button>
+                    
+                    <div class="instructions">
+                        <h3>How to Play:</h3>
+                        <ul>
+                            <li>Create an account or login</li>
+                            <li>Request an access code (one per play)</li>
+                            <li>Enter your access code to play</li>
+                            <li>Select a coin from the grid</li>
+                            <li>Wait for raffle end to see if you won!</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-panel">
+                <h2 class="panel-title">Raffle Grid - 500 Coins</h2>
+                <p>Select a coin to claim it! Coins will show your name after selection, but prizes remain hidden until the raffle ends.</p>
+                
+                <div class="coins-grid" id="coins-container">
+                    <!-- Coins will be generated by JavaScript -->
+                </div>
+                
+                <div class="prizes-preview">
+                    <div class="prize-item">
+                        <i class="fas fa-car"></i>
+                        <h3>Grand Prize</h3>
+                        <p>Brand New Car</p>
+                    </div>
+                    <div class="prize-item">
+                        <i class="fas fa-laptop"></i>
+                        <h3>Second Prize</h3>
+                        <p>High-end Laptop</p>
+                    </div>
+                    <div class="prize-item">
+                        <i class="fas fa-mobile-alt"></i>
+                        <h3>Third Prize</h3>
+                        <p>Smartphone</p>
+                    </div>
+                    <div class="prize-item">
+                        <i class="fas fa-gift"></i>
+                        <h3>10 Consolation Prizes</h3>
+                        <p>Gift Vouchers</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 25px;">
+                    <h3 class="status-title">Recent Winners</h3>
+                    <div class="winner-list" id="winner-list">
+                        <!-- Winners will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>KESSAFRIQ RAFFLES &copy; 2023 | Transparent and Fair Raffle System | Each user can play once per access code</p>
+        </footer>
+    </div>
+
+    <script>
+        // Raffle data and state
+        let currentUser = null;
+        let userAccessCode = null;
+        let hasPlayed = false;
+        let selectedCoin = null;
+        let raffleEndTime = new Date().getTime() + (24 * 60 * 60 * 1000); // 24 hours from now
+        let coins = [];
+        const totalCoins = 500;
+        const prizes = [
+            {id: 1, name: "Brand New Car", winner: null, coinId: null},
+            {id: 2, name: "High-end Laptop", winner: null, coinId: null},
+            {id: 3, name: "Smartphone", winner: null, coinId: null},
+            ...Array.from({length: 10}, (_, i) => ({id: i+4, name: "Gift Voucher $100", winner: null, coinId: null}))
+        ];
+        
+        // Initialize users and winners from localStorage
+        let users = JSON.parse(localStorage.getItem('kessafriq_users')) || [];
+        let winners = JSON.parse(localStorage.getItem('kessafriq_winners')) || [];
+        
+        // DOM Elements
+        const loginSection = document.getElementById('login-section');
+        const registerSection = document.getElementById('register-section');
+        const raffleSection = document.getElementById('raffle-section');
+        const coinsContainer = document.getElementById('coins-container');
+        const countdownTimer = document.getElementById('countdown-timer');
+        const userStatus = document.getElementById('user-status');
+        const accessCodeDisplay = document.getElementById('access-code-display');
+        const winnerList = document.getElementById('winner-list');
+        
+        // Initialize the raffle grid
+        function initializeCoins() {
+            coinsContainer.innerHTML = '';
+            coins = [];
+            
+            // Create 500 coins with unique IDs
+            for (let i = 1; i <= totalCoins; i++) {
+                const coin = document.createElement('div');
+                coin.className = 'coin';
+                coin.id = `coin-${i}`;
+                coin.dataset.id = i;
+                coin.dataset.user = '';
+                coin.dataset.selected = 'false';
+                
+                const coinValue = document.createElement('div');
+                coinValue.className = 'coin-value';
+                coinValue.textContent = i;
+                
+                coin.appendChild(coinValue);
+                coinsContainer.appendChild(coin);
+                
+                // Store coin data
+                coins.push({
+                    id: i,
+                    element: coin,
+                    selectedBy: null,
+                    prize: null
+                });
+                
+                // Add click event
+                coin.addEventListener('click', () => selectCoin(i));
+            }
+            
+            // Assign prizes to random coins
+            assignPrizesToCoins();
+            
+            // Update winner list
+            updateWinnerList();
+        }
+        
+        // Assign prizes to random coins
+        function assignPrizesToCoins() {
+            // Reset all coins
+            coins.forEach(coin => coin.prize = null);
+            
+            // Shuffle coins array
+            const shuffledCoins = [...coins].sort(() => Math.random() - 0.5);
+            
+            // Assign prizes to first N coins (where N = number of prizes)
+            for (let i = 0; i < prizes.length; i++) {
+                shuffledCoins[i].prize = prizes[i];
+                prizes[i].coinId = shuffledCoins[i].id;
+            }
+        }
+        
+        // Update the countdown timer
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const timeLeft = raffleEndTime - now;
+            
+            if (timeLeft <= 0) {
+                countdownTimer.textContent = "RAFFLE ENDED!";
+                revealPrizes();
+                return;
+            }
+            
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            
+            countdownTimer.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Select a coin
+        function selectCoin(coinId) {
+            if (!currentUser || !userAccessCode || hasPlayed) {
+                alert("You need to login and enter a valid access code to play!");
+                return;
+            }
+            
+            const coin = coins.find(c => c.id === coinId);
+            if (!coin || coin.selectedBy) {
+                alert("This coin has already been selected!");
+                return;
+            }
+            
+            // Deselect previous coin if any
+            if (selectedCoin) {
+                const prevCoin = coins.find(c => c.id === selectedCoin);
+                prevCoin.element.classList.remove('selected', 'flipped');
+                prevCoin.element.dataset.selected = 'false';
+                prevCoin.selectedBy = null;
+            }
+            
+            // Select new coin
+            coin.selectedBy = currentUser.username;
+            coin.element.classList.add('selected', 'flipped');
+            coin.element.dataset.selected = 'true';
+            coin.element.dataset.user = currentUser.username;
+            selectedCoin = coinId;
+            
+            // Mark that user has played
+            hasPlayed = true;
+            localStorage.setItem(`hasPlayed_${currentUser.username}_${userAccessCode}`, 'true');
+            
+            // Update user status
+            updateUserStatus();
+            
+            alert(`You've selected coin #${coinId}! Wait for the raffle to end to see if you won a prize.`);
+        }
+        
+        // Generate a random access code
+        function generateAccessCode() {
+            return 'KESS-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+        }
+        
+        // Login function
+        function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            if (!username || !password) {
+                alert("Please enter both username and password");
+                return;
+            }
+            
+            const user = users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                showRaffleSection();
+                updateUserStatus();
+            } else {
+                alert("Invalid username or password");
+            }
+        }
+        
+        // Register function
+        function register() {
+            const username = document.getElementById('new-username').value.trim();
+            const password = document.getElementById('new-password').value.trim();
+            const confirmPassword = document.getElementById('confirm-password').value.trim();
+            
+            if (!username || !password) {
+                alert("Please enter both username and password");
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                alert("Passwords do not match");
+                return;
+            }
+            
+            if (users.find(u => u.username === username)) {
+                alert("Username already exists");
+                return;
+            }
+            
+            const newUser = {username, password};
+            users.push(newUser);
+            localStorage.setItem('kessafriq_users', JSON.stringify(users));
+            
+            currentUser = newUser;
+            showRaffleSection();
+            updateUserStatus();
+            
+            alert("Account created successfully! You can now request an access code to play.");
+        }
+        
+        // Request a new access code
+        function requestAccessCode() {
+            if (!currentUser) {
+                alert("You must be logged in to request an access code");
+                return;
+            }
+            
+            userAccessCode = generateAccessCode();
+            
+            // Save access code to user
+            if (!currentUser.accessCodes) {
+                currentUser.accessCodes = [];
+            }
+            
+            currentUser.accessCodes.push({
+                code: userAccessCode,
+                used: false,
+                date: new Date().toISOString()
+            });
+            
+            // Update user in storage
+            const userIndex = users.findIndex(u => u.username === currentUser.username);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('kessafriq_users', JSON.stringify(users));
+            }
+            
+            updateUserStatus();
+            alert(`Your new access code is: ${userAccessCode}\nYou can use this code to play once.`);
+        }
+        
+        // Use an access code
+        function useAccessCode() {
+            const codeInput = document.getElementById('access-code').value.trim();
+            
+            if (!codeInput) {
+                alert("Please enter an access code");
+                return;
+            }
+            
+            if (!currentUser) {
+                alert("You must be logged in to use an access code");
+                return;
+            }
+            
+            // Check if user has this access code
+            const codeEntry = currentUser.accessCodes?.find(c => c.code === codeInput);
+            
+            if (!codeEntry) {
+                alert("Invalid access code");
+                return;
+            }
+            
+            if (codeEntry.used) {
+                alert("This access code has already been used");
+                return;
+            }
+            
+            // Check if user has already played with this code
+            const hasPlayedKey = `hasPlayed_${currentUser.username}_${codeInput}`;
+            if (localStorage.getItem(hasPlayedKey) === 'true') {
+                alert("You have already played with this access code");
+                codeEntry.used = true;
+                return;
+            }
+            
+            userAccessCode = codeInput;
+            hasPlayed = false;
+            
+            // Enable coin selection
+            coins.forEach(coin => {
+                if (!coin.selectedBy) {
+                    coin.element.classList.remove('disabled');
+                }
+            });
+            
+            updateUserStatus();
+            alert("Access code accepted! You can now select a coin.");
+        }
+        
+        // Update user status display
+        function updateUserStatus() {
+            if (!currentUser) {
+                userStatus.textContent = "Not logged in";
+                accessCodeDisplay.textContent = "No access code";
+                return;
+            }
+            
+            userStatus.innerHTML = `Logged in as: <strong>${currentUser.username}</strong>`;
+            
+            if (userAccessCode) {
+                accessCodeDisplay.innerHTML = `Access Code: <strong>${userAccessCode}</strong>`;
+                
+                // Check if user has played with this code
+                const hasPlayedKey = `hasPlayed_${currentUser.username}_${userAccessCode}`;
+                if (localStorage.getItem(hasPlayedKey) === 'true') {
+                    accessCodeDisplay.innerHTML += ` <span style="color:#e74c3c;">(Used)</span>`;
+                    hasPlayed = true;
+                } else {
+                    hasPlayed = false;
+                }
+            } else {
+                accessCodeDisplay.textContent = "No access code - Request one to play";
+            }
+        }
+        
+        // Show raffle section after login
+        function showRaffleSection() {
+            loginSection.classList.add('hidden');
+            registerSection.classList.add('hidden');
+            raffleSection.classList.remove('hidden');
+            
+            // Clear form fields
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('new-username').value = '';
+            document.getElementById('new-password').value = '';
+            document.getElementById('confirm-password').value = '';
+            
+            updateUserStatus();
+        }
+        
+        // Show login section
+        function showLoginSection() {
+            loginSection.classList.remove('hidden');
+            registerSection.classList.add('hidden');
+            raffleSection.classList.add('hidden');
+        }
+        
+        // Show register section
+        function showRegisterSection() {
+            loginSection.classList.add('hidden');
+            registerSection.classList.remove('hidden');
+            raffleSection.classList.add('hidden');
+        }
+        
+        // Logout function
+        function logout() {
+            currentUser = null;
+            userAccessCode = null;
+            hasPlayed = false;
+            selectedCoin = null;
+            
+            showLoginSection();
+        }
+        
+        // Reveal prizes when raffle ends
+        function revealPrizes() {
+            // Check if user won
+            if (currentUser && selectedCoin) {
+                const coin = coins.find(c => c.id === selectedCoin);
+                if (coin && coin.prize) {
+                    // User won!
+                    alert(`CONGRATULATIONS ${currentUser.username}! You won: ${coin.prize.name}`);
+                    
+                    // Add to winners list
+                    const winner = {
+                        username: currentUser.username,
+                        prize: coin.prize.name,
+                        date: new Date().toISOString().split('T')[0]
+                    };
+                    
+                    winners.unshift(winner);
+                    localStorage.setItem('kessafriq_winners', JSON.stringify(winners));
+                    updateWinnerList();
+                }
+            }
+            
+            // Show all prizes (in a real app, this would reveal all prizes)
+            coins.forEach(coin => {
+                if (coin.prize) {
+                    coin.element.innerHTML = `<div style="transform: rotateY(180deg); font-size:0.6rem; text-align:center; padding:2px;">${coin.prize.name}</div>`;
+                }
+            });
+        }
+        
+        // Update winner list display
+        function updateWinnerList() {
+            winnerList.innerHTML = '';
+            
+            if (winners.length === 0) {
+                winnerList.innerHTML = '<div class="winner-item">No winners yet. Be the first!</div>';
+                return;
+            }
+            
+            // Show recent winners (last 10)
+            const recentWinners = winners.slice(0, 10);
+            recentWinners.forEach(winner => {
+                const winnerItem = document.createElement('div');
+                winnerItem.className = 'winner-item';
+                winnerItem.innerHTML = `
+                    <span><strong>${winner.username}</strong></span>
+                    <span>${winner.prize}</span>
+                    <span>${winner.date}</span>
+                `;
+                winnerList.appendChild(winnerItem);
+            });
+        }
+        
+        // Initialize the app
+        function initApp() {
+            // Initialize coins grid
+            initializeCoins();
+            
+            // Set up event listeners
+            document.getElementById('login-btn').addEventListener('click', login);
+            document.getElementById('register-btn').addEventListener('click', register);
+            document.getElementById('request-code-btn').addEventListener('click', requestAccessCode);
+            document.getElementById('use-code-btn').addEventListener('click', useAccessCode);
+            document.getElementById('logout-btn').addEventListener('click', logout);
+            
+            document.getElementById('show-register').addEventListener('click', (e) => {
+                e.preventDefault();
+                showRegisterSection();
+            });
+            
+            document.getElementById('show-login').addEventListener('click', (e) => {
+                e.preventDefault();
+                showLoginSection();
+            });
+            
+            // Update countdown every second
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+            
+            // Check if raffle has ended on load
+            const now = new Date().getTime();
+            if (now > raffleEndTime) {
+                revealPrizes();
+            }
+        }
+        
+        // Initialize when page loads
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
